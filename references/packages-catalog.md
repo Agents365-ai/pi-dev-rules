@@ -9,8 +9,10 @@ handful are git-only packages not published to npm.
 - **Full manifest**: [`pi-packages.csv`](./pi-packages.csv) — one row per package, all 5,001, sorted
   by monthly downloads. Columns: `name, type, downloads_monthly, version, author, description,
   install, repository, npm, updated`.
-- **Refresh** (list changes daily): `python3 scripts/fetch-pi-packages.py` (regenerates the CSV;
-  no API key needed).
+- **Refresh** (list changes daily): `bash scripts/refresh.sh` — regenerates the CSV and prompts for a
+  changelog update. **Recommended cadence: weekly** (npm churn is fast but a weekly snapshot keeps
+  this skill current without constant PRs). Or run just the CSV: `python3 scripts/fetch-pi-packages.py`
+  (no API key needed).
 
 > `type` is a **heuristic** derived from npm keywords/description (npm search doesn't expose the
 > gallery's real category, which comes from each package's `pi` manifest). Treat `name`,

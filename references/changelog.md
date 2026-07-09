@@ -6,6 +6,10 @@ A reverse-chronological release-notes feed, paginated at 20 entries per page. Th
 has a "Release notes" / "RSS Feed" toggle. For the full history, scrape all pages
 (`?page=1` through `?page=13` as of 2026-07-09; oldest entry currently ~v0.75.5 from May 2026).
 
+**Cadence**: Pi ships releases every 1–3 days. Re-fetch this page weekly to keep the digest
+current. Run `bash scripts/refresh.sh` (regenerates both the package catalog and prompts for a
+changelog update).
+
 ## Recent releases (since May 2026 — ~7 weeks)
 
 | Version | Date | Highlights |
