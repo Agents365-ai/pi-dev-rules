@@ -23,6 +23,8 @@ Mirrors https://pi.dev/docs/latest (fetched 2026-07-09).
 - `references/programmatic.md` — SDK, RPC mode, JSON event-stream mode.
 - `references/platform-setup.md` — Windows, Termux, tmux, per-terminal setup, shell aliases,
   build-from-source.
+- `references/packages-catalog.md` + `references/pi-packages.csv` — full pi.dev package gallery
+  (5,001 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
 
 ## Install
 
