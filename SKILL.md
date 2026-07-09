@@ -20,6 +20,7 @@ and build Pi customizations without re-fetching.
 - Understanding the **project-trust security model** and running Pi in containers/sandboxes.
 - **Extending Pi**: writing extensions, skills, prompt templates, packages, custom providers, TUI UI.
 - Finding/installing a community package from the pi.dev gallery (5,000+ packages).
+- Checking Pi's version history / what changed in a recent release.
 - Driving Pi programmatically via the SDK, RPC mode, or JSON event-stream mode.
 - Setting up Pi on Windows/Termux/tmux/specific terminals, or building it from source.
 
@@ -37,6 +38,7 @@ and build Pi customizations without re-fetching.
 | `references/programmatic.md` | SDK, RPC mode, JSON event-stream mode |
 | `references/platform-setup.md` | Windows, Termux, tmux, per-terminal modified-Enter setup, shell aliases, build-from-source |
 | `references/packages-catalog.md` | pi.dev package gallery — how to query/refresh, category counts, top-30, + full `references/pi-packages.csv` (5,001 packages) |
+| `references/changelog.md` | pi.dev/news release notes — recent versions, RSS feed, how to fetch latest |
 
 ## Cheat sheet
 
