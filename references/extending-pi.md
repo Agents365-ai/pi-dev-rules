@@ -50,13 +50,16 @@ Do **not** start background resources in the factory — defer to `session_start
   `resources_discover` (contribute skill/prompt/theme paths; `reason: "startup"|"reload"`).
 - **Session**: `session_start` (`reason: "startup"|"reload"|"new"|"resume"|"fork"`),
   `session_info_changed`, `session_before_switch`, `session_before_fork`,
-  `session_before_compact` (may supply a custom summary), `session_compact`,
-  `session_before_tree` (may supply a custom summary), `session_tree`, `session_shutdown`.
-- **Agent**: `before_agent_start`, `agent_start`, `agent_end`.
+  `session_before_compact` (may supply custom summary; `event.willRetry` indicates whether
+  the aborted turn retries after overflow recovery), `session_compact`,
+  `session_before_tree` (may supply custom summary), `session_tree`, `session_shutdown`.
+- **Agent**: `before_agent_start`, `agent_start`, `agent_end`, `agent_settled` (status integrations —
+  fires when Pi won't continue automatically; `agent_end` already fired with `event.messages`).
 - **Turn**: `turn_start`, `turn_end`.
 - **Messages**: `message_start`, `message_update`, `message_end`.
 - **Tools**: `tool_call`, `tool_result`, `tool_execution_start|update|end`.
-- **Provider/model**: `before_provider_headers` (mutate outgoing headers in place),
+- **Provider/model**: `before_provider_headers` (mutate outgoing HTTP headers in place;
+  runs once per request, retries reuse same headers),
   `before_provider_request` (inspect/replace payload before send),
   `after_provider_response` (`event.status`, `event.headers`, before stream consume),
   `context`, `model_select` (`event.source: "set"|"cycle"|"restore"`), `thinking_level_select`.
@@ -67,12 +70,13 @@ Do **not** start background resources in the factory — defer to `session_start
 - **Register**: `registerTool(def)`, `registerCommand(name, opts)`, `registerShortcut(key, opts)`,
   `registerFlag(name, opts)`, `registerMessageRenderer()`,
   `registerEntryRenderer(customType, renderer)` (render `custom` session entries),
-  `registerProvider()`, `unregisterProvider(name)`, `on(event, handler)`.
+  `registerProvider(name, config)` (dynamic provider with optional `refreshModels`),
+  `unregisterProvider(name)`, `on(event, handler)`.
 - **Messaging**: `sendMessage(text, { triggerTurn?, deliverAs? })` (`deliverAs:
   "steer"|"followUp"|"nextTurn"`), `sendUserMessage(content, { deliverAs? })`
   (`content: string | Content[]`), `appendEntry()` (persist state in session).
 - **Tools/model**: `getActiveTools()`, `getAllTools()`, `setActiveTools()`, `setModel(model)`
-  (returns boolean), `getThinkingLevel()` (`off|minimal|low|medium|high|xhigh`), `setThinkingLevel()`,
+  (returns boolean), `getThinkingLevel()` (`off|minimal|low|medium|high|xhigh|max`), `setThinkingLevel()`,
   `getCommands()` (`{ name, description, source, sourceInfo }[]`).
 - **Session**: `setSessionName()`, `getSessionName()`, `setLabel()`, `exec()` (shell).
 - **Cross-extension bus**: `pi.events.on(event, handler)`, `pi.events.emit(event, data)`.

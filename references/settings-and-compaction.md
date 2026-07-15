@@ -14,7 +14,8 @@ Project overrides global; **nested objects merge** rather than replace.
 ### Categories & keys
 
 **Model & thinking**: `defaultProvider`, `defaultModel`,
-`defaultThinkingLevel` (`off|minimal|low|medium|high|xhigh`), `hideThinkingBlock`,
+`defaultThinkingLevel` (`off|minimal|low|medium|high|xhigh|max`), `hideThinkingBlock`,
+`showCacheMissNotices` (false — show transcript notices for significant prompt-cache misses),
 `thinkingBudgets` (custom token allocations per level), `enabledModels` (patterns for the Ctrl+P
 cycle set).
 

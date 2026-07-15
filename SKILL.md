@@ -1,8 +1,9 @@
 ---
 name: pi-dev-rules
-description: Authoritative reference and rules for working with Pi (the @earendil-works/pi-coding-agent terminal coding harness) — installing/running it, configuring providers/models/settings/keybindings, managing sessions and compaction, and extending it with extensions, skills, prompt templates, themes, packages, custom providers, and the SDK/RPC/JSON modes. Use whenever the user asks to install, configure, run, automate, script, or extend Pi, write a Pi extension or skill, set up a Pi provider/model, or integrate Pi programmatically.
+version: 0.1.0
+description: Authoritative reference for Pi (`@earendil-works/pi-coding-agent`) — install, configure, run, and extend. Use when the user asks about Pi CLI/flags/commands, providers/models/auth, settings/compaction/sessions, security/trust, extensions, skills, prompt templates, themes, packages, custom providers, TUI components, the SDK, RPC mode, or JSON streaming.
 license: MIT
-metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-09"}
+metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-16"}
 ---
 
 # Pi Dev Rules
@@ -37,7 +38,8 @@ and build Pi customizations without re-fetching.
 | `references/session-format.md` | Session JSONL schema — versions, content blocks, message/entry types, tree/context building, SessionManager API |
 | `references/programmatic.md` | SDK, RPC mode, JSON event-stream mode |
 | `references/platform-setup.md` | Windows, Termux, tmux, per-terminal modified-Enter setup, shell aliases, build-from-source |
-| `references/packages-catalog.md` | pi.dev package gallery — how to query/refresh, category counts, top-30, + full `references/pi-packages.csv` (5,001 packages) |
+| `references/development.md` | Building Pi from source, monorepo structure, forking/rebranding, debugging |
+| `references/packages-catalog.md` | pi.dev package gallery — how to query/refresh, category counts, top-30, + full `references/pi-packages.csv` (5,500 packages) |
 | `references/changelog.md` | pi.dev/news release notes — recent versions, RSS feed, how to fetch latest |
 
 ## Cheat sheet
@@ -63,7 +65,7 @@ pi --tools read,grep,find,ls -p "..."           # allowlist tools (-xt to exclud
 pi --mode json "..." | jq -c 'select(.type=="message_end")'   # JSON stream
 pi --mode rpc                                   # JSON-RPC over stdin/stdout
 
-# In-editor: @file (fuzzy), !cmd (run+send), !!cmd (run, hidden), /command, Ctrl+L model, Shift+Tab thinking
+# In-editor: @file (fuzzy), !cmd (run+send), !!cmd (run, hidden), /command, Ctrl+L model, Shift+Tab thinking, Ctrl+X copy
 # While the agent runs: Enter queues a steering msg, Alt+Enter a follow-up, Esc aborts + restores
 ```
 

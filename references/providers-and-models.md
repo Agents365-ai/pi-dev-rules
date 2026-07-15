@@ -198,7 +198,7 @@ Other `compat` fields incl. (openai-completions) `supportsUsageInStreaming`, `ma
 (`max_completion_tokens`|`max_tokens`), `thinkingFormat`, `supportsStrictMode`, `supportsStore`,
 `requiresToolResultName`, `cacheControlFormat`, `supportsLongCacheRetention`, `openRouterRouting`,
 `vercelGatewayRouting`; (anthropic-messages) `supportsEagerToolInputStreaming`,
-`sendSessionAffinityHeaders`, `supportsCacheControlOnTools`, `forceAdaptiveThinking`,
+`sessionAffinityFormat` (`"openai"`|`"openai-nosession"`|`"openrouter"` — replaces removed `sendSessionIdHeader`), `supportsCacheControlOnTools`, `forceAdaptiveThinking`,
 `allowEmptySignature`. `thinkingFormat` values: `reasoning_effort`/`openai`, `openrouter`,
 `deepseek`, `together`, `zai`, `qwen`, `chat-template`, `qwen-chat-template`, `string-thinking`,
 `ant-ling`.
@@ -206,7 +206,7 @@ Other `compat` fields incl. (openai-completions) `supportsUsageInStreaming`, `ma
 **Thinking level mapping** (reasoning models): omitted = supported w/ default; string = specific
 value; `null` = unsupported.
 ```json
-"thinkingLevelMap": { "off": null, "minimal": null, "low": null, "medium": null, "high": "high", "xhigh": "max" }
+"thinkingLevelMap": { "off": null, "minimal": null, "low": null, "medium": null, "high": "high", "xhigh": "xhigh", "max": "max" }
 ```
 
 **Override built-in provider** (route through a proxy; built-in models stay available):
