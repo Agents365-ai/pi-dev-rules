@@ -66,9 +66,9 @@ cp -r pi-dev-rules ~/.claude/skills/      # example: Claude Code, global
 Re-fetch the pages under https://pi.dev/docs/latest and regenerate the `references/` files; bump
 `metadata.fetched` in `SKILL.md`.
 
-## ❤️ Support
+## Support
 
-If this skill helps you, consider supporting the author:
+If this project helps you, consider supporting the author:
 
 <table>
   <tr>
@@ -95,13 +95,13 @@ If this skill helps you, consider supporting the author:
   </tr>
 </table>
 
-## 👤 Author
+## Author
 
 **Agents365-ai**
 
-- GitHub: https://github.com/Agents365-ai
 - Bilibili: https://space.bilibili.com/441831884
+- GitHub: https://github.com/Agents365-ai
 
-## 📄 License
+## License
 
-[MIT](LICENSE) — docs content © Earendil Inc.
+[MIT](LICENSE)

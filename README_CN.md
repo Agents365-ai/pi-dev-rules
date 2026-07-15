@@ -65,9 +65,9 @@ cp -r pi-dev-rules ~/.claude/skills/      # 示例：Claude Code，全局
 重新抓取 https://pi.dev/docs/latest 下的页面并重新生成 `references/` 文件；更新
 `SKILL.md` 中的 `metadata.fetched`。
 
-## ❤️ 支持
+## 支持
 
-如果这个 skill 对你有帮助，欢迎支持作者：
+如果这个项目对你有帮助，欢迎支持作者：
 
 <table>
   <tr>
@@ -87,20 +87,20 @@ cp -r pi-dev-rules ~/.claude/skills/      # 示例：Claude Code，全局
       <b>Buy Me a Coffee</b>
     </td>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/awarding/award.gif" width="180" alt="打赏">
+      <img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/awarding/award.gif" width="180" alt="打赏作者">
       <br>
-      <b>打赏</b>
+      <b>打赏作者</b>
     </td>
   </tr>
 </table>
 
-## 👤 作者
+## 作者
 
 **Agents365-ai**
 
-- GitHub: https://github.com/Agents365-ai
 - Bilibili: https://space.bilibili.com/441831884
+- GitHub: https://github.com/Agents365-ai
 
-## 📄 许可证
+## 许可证
 
-[MIT](LICENSE) — 文档内容 © Earendil Inc.
+[MIT](LICENSE)
