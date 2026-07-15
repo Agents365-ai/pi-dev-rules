@@ -38,6 +38,7 @@ On first launch in a project that ships `.pi/` resources or `.agents/skills`, Pi
 - Paste images **Ctrl+V** (**Alt+V** on Windows) or drag-and-drop.
 - `!command` runs shell and sends output to model; `!!command` runs without sending.
 - **Ctrl+G** opens `$VISUAL`/`$EDITOR` (or `externalEditor` setting).
+- **Ctrl+X** copies the last assistant message (or selected message in `/tree`).
 
 ### Message queue (steering & follow-up)
 
@@ -56,7 +57,7 @@ While the agent is running you can keep typing:
 decision) · `/resume` · `/session` (id, tokens, cost) · `/tree` (jump anywhere in session) ·
 `/new` · `/name <name>` · `/fork` · `/clone` · `/import <file>` (resume from a JSONL file) ·
 `/compact [instructions]` · `/export [file]` (HTML **or** JSONL) · `/copy` (copy last assistant
-message) · `/share` (GitHub gist) · `/reload` (re-apply keybindings/resources) · `/hotkeys` ·
+message; also Ctrl+X) · `/share` (GitHub gist) · `/reload` (re-apply keybindings/resources) · `/hotkeys` ·
 `/changelog` · `/skill:<name> [args]` (needs `enableSkillCommands`) · `/quit`.
 
 ## Context files
@@ -89,7 +90,7 @@ pi config
 
 - `--provider <name>` (anthropic, openai, google, …)
 - `--model <pattern>` — accepts `provider/model`, `model:thinkingLevel`, glob patterns.
-- `--thinking <off|minimal|low|medium|high|xhigh>`
+- `--thinking <off|minimal|low|medium|high|xhigh|max>`
 - `--list-models [search]`, `--models "claude-*,gpt-4o"` (comma-separated patterns for Ctrl+P cycle)
 - `--api-key <key>` — key override (highest precedence).
 
@@ -97,7 +98,8 @@ pi config
 
 - `-c`/`--continue` · `-r`/`--resume` · `--session <path|id>` · `--fork <path|id>` ·
   `--no-session` (ephemeral) · `--session-dir <dir>` (storage dir; CLI > `PI_CODING_AGENT_SESSION_DIR`
-  > settings) · `--name <name>`/`-n` (set session display name at startup).
+  > settings) · `--name <name>`/`-n` (set session display name at startup) ·
+  `--exclude-tools <list>`/`-xt` (disable specific tools while keeping others).
 
 **Tool options**
 
@@ -149,7 +151,8 @@ pi --tools read,grep,find,ls -p "Review the code"
 - `PI_TELEMETRY` — override install/update telemetry (`1/true/yes` or `0/false/no`).
 - `PI_CACHE_RETENTION` — set `long` for extended prompt cache.
 - `PI_HARDWARE_CURSOR` — show hardware cursor (also `showHardwareCursor` setting).
-- `VISUAL` / `EDITOR` — external editor for Ctrl+G.
+- `VISUAL` / `EDITOR` — external editor for Ctrl+G (override with `externalEditor` setting).
+- `PI_CODING_AGENT_CONFIG_DIR` — alias for `PI_CODING_AGENT_DIR`.
 
 ## Sessions
 
@@ -192,6 +195,6 @@ ctrl+] / `jumpBackward` ctrl+alt+]) · `tui.input.*` (`newLine` shift+enter/ctrl
 `clipboard.pasteImage` ctrl+v/alt+v) · `app.session.*` (`new`/`tree`/`fork`/`resume`,
 `togglePath` ctrl+p, `toggleSort` ctrl+s, `rename` ctrl+r, `delete` ctrl+d) · `app.model.*`
 (`select` ctrl+l, `cycleForward` ctrl+p, `cycleBackward` shift+ctrl+p) · `app.thinking.*`
-(`cycle` shift+tab, `toggle` ctrl+t) · `app.tools.expand` ctrl+o · `app.message.followUp` alt+enter /
+(`cycle` shift+tab, `toggle` ctrl+t) · `app.tools.expand` ctrl+o · `app.message.copy` ctrl+x · `app.message.followUp` alt+enter /
 `dequeue` alt+up · `app.tree.*` (fold/unfold, `editLabel` shift+l, filter cycles) ·
 `app.models.*` (scoped-models selector: `save` ctrl+s, `enableAll` ctrl+a, `clearAll` ctrl+x).

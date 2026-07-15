@@ -1,12 +1,12 @@
 # Pi — Package Gallery Catalog
 
-Source: https://pi.dev/packages · Snapshot: **2026-07-09** · **5,001 packages**
+Source: https://pi.dev/packages · Snapshot: **2026-07-16** · **5,500 packages**
 
 The pi.dev package gallery is backed by the **npm registry keyword `pi-package`** (pi.dev's own
 `/api` routes are disabled — "reserved for future features"). The gallery shows ~5,005; the extra
 handful are git-only packages not published to npm.
 
-- **Full manifest**: [`pi-packages.csv`](./pi-packages.csv) — one row per package, all 5,001, sorted
+- **Full manifest**: [`pi-packages.csv`](./pi-packages.csv) — one row per package, all 5,500, sorted
   by monthly downloads. Columns: `name, type, downloads_monthly, version, author, description,
   install, repository, npm, updated`.
 - **Refresh** (list changes daily): `bash scripts/refresh.sh` — regenerates the CSV and prompts for a
@@ -49,12 +49,12 @@ For a human: open `pi-packages.csv` in any spreadsheet, or filter live on https:
 
 | type (heuristic) | count |
 |------------------|-------|
-| extension | 2,536 |
-| package (bundle / uncategorized) | 1,882 |
-| skill | 446 |
-| theme | 91 |
-| prompt | 46 |
-| **total** | **5,001** |
+| extension | 2,853 |
+| package (bundle / uncategorized) | 2,025 |
+| skill | 476 |
+| theme | 97 |
+| prompt | 49 |
+| **total** | **5,500** |
 
 ## Top 30 by monthly downloads
 
@@ -91,5 +91,5 @@ For a human: open `pi-packages.csv` in any spreadsheet, or filter live on https:
 | `superpowers-zh` | 11,192 | Chinese-enhanced "superpowers" skills (+4 original) |
 | `pi-shazam` | 10,920 | Codebase-awareness toolkit — 7 structural analysis tools; MCP |
 
-The remaining ~4,970 packages are in [`pi-packages.csv`](./pi-packages.csv). Downloads are npm
+The remaining ~5,470 packages are in [`pi-packages.csv`](./pi-packages.csv). Downloads are npm
 monthly figures at snapshot time; re-run the fetch script for current numbers.

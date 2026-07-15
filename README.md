@@ -1,10 +1,29 @@
 # pi-dev-rules
 
-A Claude Code / OpenClaw / Pi skill that packages the **latest [Pi](https://pi.dev) documentation**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Agents365-ai/pi-dev-rules?style=flat&logo=github)](https://github.com/Agents365-ai/pi-dev-rules/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Agents365-ai/pi-dev-rules?style=flat&logo=github)](https://github.com/Agents365-ai/pi-dev-rules/network/members)
+[![Latest Release](https://img.shields.io/github/v/release/Agents365-ai/pi-dev-rules?logo=github)](https://github.com/Agents365-ai/pi-dev-rules/releases/latest)
+[![Last Commit](https://img.shields.io/github/last-commit/Agents365-ai/pi-dev-rules?logo=github)](https://github.com/Agents365-ai/pi-dev-rules/commits/main)
+
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-2ea44f)](https://agentskills.io)
+
+**English** · [中文](README_CN.md)
+
+A coding-agent skill that packages the **latest [Pi](https://pi.dev) documentation**
 (`@earendil-works/pi-coding-agent`) as an on-demand reference, so an agent can install, configure,
 run, and **extend Pi** without re-fetching the docs.
 
-Mirrors https://pi.dev/docs/latest (fetched 2026-07-09).
+Mirrors https://pi.dev/docs/latest (fetched 2026-07-16).
+
+Works with Claude Code, Cursor, Codex, Copilot, Windsurf, Cline / Roo Code, Gemini CLI,
+Aider, Zed, OpenCode, OpenClaw / ClawHub, Hermes, pi-mono — plus major Chinese agents
+(Trae, Qwen Code / Tongyi Lingma, Baidu Comate, CodeGeeX) — and any agent that reads
+`AGENTS.md` or the [Agent Skills](https://agentskills.io) format.
+
+<p align="center">
+  <img src="assets/workflow-en.png" width="700" alt="pi-dev-rules workflow">
+</p>
 
 ## What's inside
 
@@ -23,8 +42,10 @@ Mirrors https://pi.dev/docs/latest (fetched 2026-07-09).
 - `references/programmatic.md` — SDK, RPC mode, JSON event-stream mode.
 - `references/platform-setup.md` — Windows, Termux, tmux, per-terminal setup, shell aliases,
   build-from-source.
+- `references/development.md` — building Pi from source, monorepo structure, forking/rebranding,
+  debugging.
 - `references/packages-catalog.md` + `references/pi-packages.csv` — full pi.dev package gallery
-  (5,001 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
+  (5,500 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
 
 ## Install
 
@@ -45,6 +66,42 @@ cp -r pi-dev-rules ~/.claude/skills/      # example: Claude Code, global
 Re-fetch the pages under https://pi.dev/docs/latest and regenerate the `references/` files; bump
 `metadata.fetched` in `SKILL.md`.
 
-## License
+## ❤️ Support
 
-MIT (docs content © Earendil Inc.).
+If this skill helps you, consider supporting the author:
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/wechat-pay.png" width="180" alt="WeChat Pay">
+      <br>
+      <b>WeChat Pay</b>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/alipay.png" width="180" alt="Alipay">
+      <br>
+      <b>Alipay</b>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/qrcode/buymeacoffee.png" width="180" alt="Buy Me a Coffee">
+      <br>
+      <b>Buy Me a Coffee</b>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/Agents365-ai/images_payment/main/awarding/award.gif" width="180" alt="Give a Reward">
+      <br>
+      <b>Give a Reward</b>
+    </td>
+  </tr>
+</table>
+
+## 👤 Author
+
+**Agents365-ai**
+
+- GitHub: https://github.com/Agents365-ai
+- Bilibili: https://space.bilibili.com/441831884
+
+## 📄 License
+
+[MIT](LICENSE) — docs content © Earendil Inc.
