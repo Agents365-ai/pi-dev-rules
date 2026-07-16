@@ -1,16 +1,16 @@
 ---
 name: pi-dev-rules
-version: 0.1.0
+version: 0.1.1
 description: Authoritative reference for Pi (`@earendil-works/pi-coding-agent`) — install, configure, run, and extend. Use when the user asks about Pi CLI/flags/commands, providers/models/auth, settings/compaction/sessions, security/trust, extensions, skills, prompt templates, themes, packages, custom providers, TUI components, the SDK, RPC mode, or JSON streaming.
 license: MIT
-metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-16"}
+metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-16","packagesRefreshed":"2026-07-16"}
 ---
 
 # Pi Dev Rules
 
 Pi is a **minimal terminal coding harness**: lightweight core, extended through TypeScript
 customizations. Package: `@earendil-works/pi-coding-agent`. Maintained by Earendil Inc. (MIT).
-This skill mirrors the official docs at https://pi.dev/docs/latest so you can answer Pi questions
+This skill mirrors the official docs at <https://pi.dev/docs/latest> so you can answer Pi questions
 and build Pi customizations without re-fetching.
 
 ## When to use this skill
@@ -28,7 +28,7 @@ and build Pi customizations without re-fetching.
 ## Reference index — load the file you need
 
 | File | Covers |
-|------|--------|
+| ------ | -------- |
 | `references/cli-and-usage.md` | Install, auth, launching, CLI flags, slash commands, message queue, context files, env vars, sessions, keybindings |
 | `references/providers-and-models.md` | Subscription & API-key providers (30+), `auth.json` (+ scoped `env`), cloud providers (Azure/Bedrock/Vertex/Cloudflare), custom models in `models.json`, `compat`, custom-provider extensions |
 | `references/settings-and-compaction.md` | `settings.json` schema + example, trust/analytics/retry/transport keys, compaction (auto/manual) and branch summarization |
@@ -42,6 +42,19 @@ and build Pi customizations without re-fetching.
 | `references/packages-catalog.md` | pi.dev package gallery — how to query/refresh, category counts, top-30, + full `references/pi-packages.csv` (5,500 packages) |
 | `references/changelog.md` | pi.dev/news release notes — recent versions, RSS feed, how to fetch latest |
 
+## Starter plugins
+
+Every Pi user should install these four (same author, battle-tested):
+
+```bash
+pi install npm:pi-mcp-adapter     # MCP server integration
+pi install npm:pi-subagents       # subagents / loop / chain / parallel
+pi install npm:pi-lens            # real-time LSP diagnostics
+pi install npm:pi-web-access      # web search, URL fetch, YouTube, PDF
+```
+
+Then `pi list` to verify, restart Pi.
+
 ## Cheat sheet
 
 ```bash
@@ -49,6 +62,8 @@ npm install -g --ignore-scripts @earendil-works/pi-coding-agent   # install (or:
 export ANTHROPIC_API_KEY=sk-ant-...                               # or run /login in-session
 cd /path/to/project && pi                                          # start interactive (may prompt to trust the project)
 
+pi update self                            # update Pi itself
+pi list                                   # list installed packages
 pi -c                       # continue most recent session
 pi -r                       # browse/resume sessions
 pi --session <path|id>      # open specific session
