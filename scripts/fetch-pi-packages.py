@@ -18,8 +18,14 @@ import urllib.request
 
 SEARCH = "https://registry.npmjs.org/-/v1/search?text=keywords:pi-package&size={size}&from={frm}"
 PAGE = 250  # npm search hard cap per request
-OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "references", "pi-packages.csv"
+OUT = (
+    sys.argv[1]
+    if len(sys.argv) > 1
+    else os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "references",
+        "pi-packages.csv",
+    )
 )
 
 
@@ -62,18 +68,22 @@ def fetch_all():
             break
         for o in objs:
             p = o.get("package", {})
-            rows.append({
-                "name": p.get("name", ""),
-                "type": classify(p.get("keywords", []), p.get("description", "")),
-                "downloads_monthly": (o.get("downloads") or {}).get("monthly", 0),
-                "version": p.get("version", ""),
-                "author": (p.get("maintainers") or [{}])[0].get("username", ""),
-                "description": (p.get("description", "") or "").replace("\n", " ").strip(),
-                "install": f"pi install npm:{p.get('name', '')}",
-                "repository": (p.get("links") or {}).get("repository", ""),
-                "npm": (p.get("links") or {}).get("npm", ""),
-                "updated": (p.get("date", "") or "")[:10],
-            })
+            rows.append(
+                {
+                    "name": p.get("name", ""),
+                    "type": classify(p.get("keywords", []), p.get("description", "")),
+                    "downloads_monthly": (o.get("downloads") or {}).get("monthly", 0),
+                    "version": p.get("version", ""),
+                    "author": (p.get("maintainers") or [{}])[0].get("username", ""),
+                    "description": (p.get("description", "") or "")
+                    .replace("\n", " ")
+                    .strip(),
+                    "install": f"pi install npm:{p.get('name', '')}",
+                    "repository": (p.get("links") or {}).get("repository", ""),
+                    "npm": (p.get("links") or {}).get("npm", ""),
+                    "updated": (p.get("date", "") or "")[:10],
+                }
+            )
         frm += len(objs)
         print(f"  fetched {frm}/{total}", file=sys.stderr)
         time.sleep(0.15)
@@ -87,10 +97,22 @@ def fetch_all():
 
 
 def main():
-    print("Fetching Pi package gallery from npm (keyword: pi-package)...", file=sys.stderr)
+    print(
+        "Fetching Pi package gallery from npm (keyword: pi-package)...", file=sys.stderr
+    )
     rows, total = fetch_all()
-    cols = ["name", "type", "downloads_monthly", "version", "author",
-            "description", "install", "repository", "npm", "updated"]
+    cols = [
+        "name",
+        "type",
+        "downloads_monthly",
+        "version",
+        "author",
+        "description",
+        "install",
+        "repository",
+        "npm",
+        "updated",
+    ]
     try:
         with open(OUT, "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=cols)
@@ -99,9 +121,16 @@ def main():
     except OSError as e:
         raise SystemExit(f"failed to write {OUT}: {e}")
     from collections import Counter
+
     by_type = Counter(r["type"] for r in rows)
-    print(f"\nWrote {len(rows)} packages (registry total: {total}) -> {OUT}", file=sys.stderr)
-    print("By type: " + ", ".join(f"{k}={v}" for k, v in by_type.most_common()), file=sys.stderr)
+    print(
+        f"\nWrote {len(rows)} packages (registry total: {total}) -> {OUT}",
+        file=sys.stderr,
+    )
+    print(
+        "By type: " + ", ".join(f"{k}={v}" for k, v in by_type.most_common()),
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":
