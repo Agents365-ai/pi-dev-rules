@@ -45,15 +45,17 @@ def fetch_all():
     rows, total, frm = [], None, 0
     while total is None or frm < total:
         url = SEARCH.format(size=PAGE, frm=frm)
+        data = None  # bound by the loop below (always breaks or raises)
         for attempt in range(4):
             try:
                 with urllib.request.urlopen(url, timeout=30) as r:
                     data = json.load(r)
                 break
-            except Exception as e:  # noqa: BLE001 - transient network/registry errors
+            except Exception:  # noqa: BLE001 - transient network/registry errors
                 if attempt == 3:
                     raise
                 time.sleep(2 * (attempt + 1))
+        assert data is not None  # loop above always breaks (success) or raises
         total = data["total"]
         objs = data.get("objects", [])
         if not objs:
@@ -75,6 +77,11 @@ def fetch_all():
         frm += len(objs)
         print(f"  fetched {frm}/{total}", file=sys.stderr)
         time.sleep(0.15)
+    # npm search overlaps pages, so dedupe by package name before ranking.
+    seen = {}
+    for r in rows:
+        seen.setdefault(r["name"], r)
+    rows = list(seen.values())
     rows.sort(key=lambda r: r["downloads_monthly"], reverse=True)
     return rows, total
 
@@ -84,10 +91,13 @@ def main():
     rows, total = fetch_all()
     cols = ["name", "type", "downloads_monthly", "version", "author",
             "description", "install", "repository", "npm", "updated"]
-    with open(OUT, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=cols)
-        w.writeheader()
-        w.writerows(rows)
+    try:
+        with open(OUT, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=cols)
+            w.writeheader()
+            w.writerows(rows)
+    except OSError as e:
+        raise SystemExit(f"failed to write {OUT}: {e}")
     from collections import Counter
     by_type = Counter(r["type"] for r in rows)
     print(f"\nWrote {len(rows)} packages (registry total: {total}) -> {OUT}", file=sys.stderr)

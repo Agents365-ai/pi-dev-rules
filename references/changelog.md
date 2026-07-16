@@ -1,6 +1,6 @@
 # Pi — Changelog
 
-Source: https://pi.dev/news · RSS: `https://pi.dev/news.xml`
+Source: <https://pi.dev/news> · RSS: `https://pi.dev/news.xml`
 
 A reverse-chronological release-notes feed, paginated at 20 entries per page. The live page
 has a "Release notes" / "RSS Feed" toggle. For the full history, scrape all pages
@@ -13,8 +13,9 @@ changelog update).
 ## Recent releases (since May 2026 — ~10 weeks)
 
 | Version | Date | Highlights |
-|---------|------|-----------|
-| **0.80.7** | 2026-07-14 | `sessionAffinityFormat` replaces `sendSessionIdHeader`; cache-friendly dynamic tool loading for Anthropic/OpenAI Responses; `Ctrl+X` copies last assistant message; Fable 5 `xhigh`/`max` thinking across provider catalogs |
+| --------- | ------ | ----------- |
+| **0.80.8** | 2026-07-16 | Unified `ModelRuntime` + provider-owned `/login`; live model-catalog refresh (`/model`, `pi update --models`); xAI device-code OAuth + Grok 4.5 Responses; **breaking**: `authStorage`/`modelRegistry` SDK options → async `modelRuntime`; `ModelRegistry.refresh()` now async; removed `ModelRuntime.getAll/find/getSnapshot/getAuthOptions` |
+| 0.80.7 | 2026-07-14 | `sessionAffinityFormat` replaces `sendSessionIdHeader`; cache-friendly dynamic tool loading for Anthropic/OpenAI Responses; `Ctrl+X` copies last assistant message; Fable 5 `xhigh`/`max` thinking across provider catalogs |
 | 0.80.6 | 2026-07-09 | Opt-in `max` thinking level above `xhigh` (GPT-5.6, adaptive Claude); input-based pricing tiers for long-context cost accounting; `~` expansion for `shellPath` |
 | 0.80.4 | 2026-07-09 | `showCacheMissNotices`; project-local config via `pi config -l`; extension hooks: `agent_settled`, `before_provider_headers`, `InlineExtension`; GPT-5.6 metadata, Copilot Claude Sonnet 5, zstd Codex SSE transport |
 | **0.80.3** | 2026-06-30 | Claude Sonnet 5, `outputPad` setting, `externalEditor` setting, richer RPC session commands, extension session metadata, modern Azure Foundry endpoints |
