@@ -1,6 +1,6 @@
 ---
 name: pi-dev-rules
-version: 0.1.1
+version: 0.1.2
 description: Authoritative reference for Pi (`@earendil-works/pi-coding-agent`) — install, configure, run, and extend. Use when the user asks about Pi CLI/flags/commands, providers/models/auth, settings/compaction/sessions, security/trust, extensions, skills, prompt templates, themes, packages, custom providers, TUI components, the SDK, RPC mode, or JSON streaming.
 license: MIT
 metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-16","packagesRefreshed":"2026-07-16"}
@@ -39,7 +39,7 @@ and build Pi customizations without re-fetching.
 | `references/programmatic.md` | SDK, RPC mode, JSON event-stream mode |
 | `references/platform-setup.md` | Windows, Termux, tmux, per-terminal modified-Enter setup, shell aliases, build-from-source |
 | `references/development.md` | Building Pi from source, monorepo structure, forking/rebranding, debugging |
-| `references/packages-catalog.md` | pi.dev package gallery — how to query/refresh, category counts, top-30, + full `references/pi-packages.csv` (5,500 packages) |
+| `references/packages-catalog.md` | pi.dev package gallery — how to query/refresh, category counts, top-30, + full `references/pi-packages.csv` (5,250 packages) |
 | `references/changelog.md` | pi.dev/news release notes — recent versions, RSS feed, how to fetch latest |
 
 ## Starter plugins

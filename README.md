@@ -14,7 +14,7 @@ A coding-agent skill that packages the **latest [Pi](https://pi.dev) documentati
 (`@earendil-works/pi-coding-agent`) as an on-demand reference, so an agent can install, configure,
 run, and **extend Pi** without re-fetching the docs.
 
-Mirrors https://pi.dev/docs/latest (fetched 2026-07-16).
+Mirrors <https://pi.dev/docs/latest> (fetched 2026-07-16).
 
 Works with Claude Code, Cursor, Codex, Copilot, Windsurf, Cline / Roo Code, Gemini CLI,
 Aider, Zed, OpenCode, OpenClaw / ClawHub, Hermes, pi-mono — plus major Chinese agents
@@ -45,12 +45,12 @@ Aider, Zed, OpenCode, OpenClaw / ClawHub, Hermes, pi-mono — plus major Chinese
 - `references/development.md` — building Pi from source, monorepo structure, forking/rebranding,
   debugging.
 - `references/packages-catalog.md` + `references/pi-packages.csv` — full pi.dev package gallery
-  (5,500 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
+  (5,250 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
 
 ## Install
 
 | Platform | Path |
-|----------|------|
+| ---------- | ------ |
 | Claude Code (global) | `~/.claude/skills/pi-dev-rules/` |
 | Claude Code (project) | `.claude/skills/pi-dev-rules/` |
 | OpenClaw (global) | `~/.openclaw/skills/pi-dev-rules/` |
@@ -63,7 +63,7 @@ cp -r pi-dev-rules ~/.claude/skills/      # example: Claude Code, global
 
 ## Updating
 
-Re-fetch the pages under https://pi.dev/docs/latest and regenerate the `references/` files; bump
+Re-fetch the pages under <https://pi.dev/docs/latest> and regenerate the `references/` files; bump
 `metadata.fetched` in `SKILL.md`.
 
 ## Support
@@ -99,8 +99,8 @@ If this project helps you, consider supporting the author:
 
 **Agents365-ai**
 
-- Bilibili: https://space.bilibili.com/441831884
-- GitHub: https://github.com/Agents365-ai
+- Bilibili: <https://space.bilibili.com/441831884>
+- GitHub: <https://github.com/Agents365-ai>
 
 ## License
 
