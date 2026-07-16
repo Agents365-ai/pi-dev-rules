@@ -1,9 +1,9 @@
 ---
 name: pi-dev-rules
-version: 0.1.2
+version: 0.1.3
 description: Authoritative reference for Pi (`@earendil-works/pi-coding-agent`) — install, configure, run, and extend. Use when the user asks about Pi CLI/flags/commands, providers/models/auth, settings/compaction/sessions, security/trust, extensions, skills, prompt templates, themes, packages, custom providers, TUI components, the SDK, RPC mode, or JSON streaming.
 license: MIT
-metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-16","packagesRefreshed":"2026-07-16"}
+metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-17","packagesRefreshed":"2026-07-17"}
 ---
 
 # Pi Dev Rules
