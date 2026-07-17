@@ -1,125 +1,140 @@
 # Pi — Security & Containerization
-
 Source: https://pi.dev/docs/latest/security, /containerization
-
-Pi is a **local coding agent**: it runs with the permissions of the user account that starts it and
-treats files writable by that user as inside the same local trust boundary.
 
 ---
 
-## 1. Project trust
+> **Auto-built from individual doc pages.**
+> Sources: https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/docs/security.md, https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/docs/containerization.md
 
-Project trust controls whether Pi loads project-local settings, resources, packages, and extensions.
-**It is not a sandbox** and does not restrict what the model can ask tools to do once you start
-working in a directory.
+## Security
 
-### What requires trust
+Pi is a local coding agent. It runs with the permissions of the user account that starts it, and it treats files writable by that user as inside the same local trust boundary.
 
-A project is treated as requiring trust when, from the current working directory, any of these
-exist:
+## Project Trust
+
+Project trust controls whether pi loads project-local settings, resources, packages, and extensions. It is not a sandbox and it does not restrict what the model can ask tools to do after you start working in a directory.
+
+Pi considers a project to have resources that require trust when it finds any of these from the current working directory:
 
 - `.pi/settings.json`
 - `.pi/extensions`, `.pi/skills`, `.pi/prompts`, or `.pi/themes`
 - `.pi/SYSTEM.md` or `.pi/APPEND_SYSTEM.md`
-- project `.agents/skills` in the current dir or an ancestor
+- project `.agents/skills` in the current directory or an ancestor directory
 
-A bare `.pi` directory (no resources) does **not** count.
+A bare `.pi` directory does not count as a project resource that requires trust.
 
-### Deciding trust
+When an interactive session starts in a project with resources that require trust and no saved decision for the current directory or a parent directory, pi follows `defaultProjectTrust` from global settings. The default value is `"ask"`, which asks whether to trust the project when UI is available. Saved decisions are stored by canonical directory in `~/.pi/agent/trust.json`, and the closest saved decision on the current or parent path applies before the global default.
 
-- On interactive start in a trust-requiring project with no saved decision (for the dir or a
-  parent), Pi follows **`defaultProjectTrust`** (global setting): `"ask"` (default; prompts when a
-  UI is available), `"always"`, or `"never"`.
-- Saved decisions are stored **by canonical directory** in **`~/.pi/agent/trust.json`**; the closest
-  saved decision on the current/parent path wins over the global default. Save with `/trust`.
-- **Trusting** loads: `.pi/settings.json`, `.pi` resources (extensions/skills/prompts/themes/system
-  prompt files), missing project packages configured via project settings, and project-local /
-  project-package extensions.
-- **Declining** skips those resources. `AGENTS.md`/`CLAUDE.md` context files load **regardless** of
-  trust (unless context loading is disabled). Before trust resolves, Pi loads only context files,
-  user/global extensions, and CLI `-e` extensions.
-- User/global and CLI extensions can handle the **`project_trust` event**; the first extension that
-  returns a yes/no decision owns it.
-- **Non-interactive modes** (`-p`, `--mode json`, `--mode rpc`) show no prompt: with no applicable
-  saved decision, `"ask"` and `"never"` ignore the resources while `"always"` trusts them. Override
-  a single run with **`--approve`/`-a`** or **`--no-approve`/`-na`**.
+Trusting a project allows pi to load project resources that require trust, including:
 
-## 2. No built-in sandbox
+- `.pi/settings.json`
+- `.pi` resources such as extensions, skills, prompt templates, themes, and system prompt files
+- missing project packages configured through project settings
+- project-local extensions and project package-managed extensions
 
-Pi ships **no built-in sandbox**. Built-in tools read/write/edit files and run shell commands with
-the Pi process's permissions; extensions are TypeScript modules with the same permissions; package
-installs, shell commands, language servers, and test commands run as ordinary local processes.
+Declining trust skips protected resources. `AGENTS.md` and `CLAUDE.md` context files are loaded regardless of project trust unless context loading is disabled. Before trust is resolved, pi only loads context files, user/global extensions, and CLI `-e` extensions. User/global and CLI extensions can handle the `project_trust` event; the first extension that returns a yes/no decision owns the decision.
 
-This is intentional — Pi is designed to operate on local source trees and integrate with the dev
-environment. "Real isolation needs to come from the operating system or a virtualization/container
-boundary." Project trust is only an **input-loading guard**; it does not make untrusted code,
-prompts, or model output safe. **Prompt injection** from repository files, comments, docs, context
-files, or build output is an expected local-agent risk and cannot be reliably prevented by Pi.
+Non-interactive modes (`-p`, `--mode json`, and `--mode rpc`) do not show a trust prompt. Without an applicable saved trust decision, `defaultProjectTrust: "ask"` and `"never"` ignore such resources, while `"always"` trusts them. Use `--approve`/`-a` or `--no-approve`/`-na` to override project trust for one run.
 
-## 3. Running untrusted or unmonitored work
+## No Built-in Sandbox
 
-For untrusted repos, unmonitored generated code, or unattended automation, run Pi in a container,
-VM, micro-VM, or policy-controlled sandbox with only the required files/credentials:
+Pi does not include a built-in sandbox. Built-in tools can read files, write files, edit files, and run shell commands with the permissions of the pi process. Extensions are TypeScript modules that run with the same permissions. Package installs, shell commands, language servers, test commands, and other developer tools behave as ordinary local processes.
 
-- run the whole `pi` process inside a container/sandbox, **or** run host Pi and route built-in tool
-  execution into a Gondolin micro-VM;
-- mount only the workspace paths the agent should access;
-- **avoid mounting host `~/.pi/agent`** unless the container should reach host sessions, settings,
-  and credentials (it exposes auth + session files);
-- pass the minimum API keys, or short-lived credentials; restrict network access when unneeded;
-- review diffs/outputs before copying results back to trusted systems. Bind-mounting a workspace
-  read/write lets in-container writes modify host files — use read-only mounts or copy in/out for
-  stronger protection.
+This is intentional. Pi is designed to operate on local source trees, invoke project toolchains, and integrate with the user's existing development environment. A partial in-process sandbox would be easy to misunderstand as a security boundary while still depending on the host shell, filesystem, package managers, credentials, and extension code. Real isolation needs to come from the operating system or a virtualization/container boundary.
 
-### Reporting security issues
+Project trust is only an input-loading guard. It prevents a repository from silently changing pi's settings or extensions before you approve it. It does not make untrusted code, untrusted prompts, or untrusted model output safe. Prompt injection from repository files, comments, documentation, context files, or build output is expected local-agent risk and cannot be reliably prevented by pi.
 
-Follow the repo Security Policy; do not open a public issue. Out of scope (unless a real
-privilege-boundary bypass is shown): expected local-agent behavior, the lack of a built-in sandbox,
-prompt injection from untrusted content, behavior of user-installed extensions/skills.
+## Running Untrusted or Unmonitored Work
+
+For untrusted repositories, generated code you do not intend to monitor closely, or unattended automation, run pi in a contained environment. Use a container, VM, micro-VM, remote sandbox, or policy-controlled sandbox with only the files and credentials required for the task.
+
+Common patterns are documented in [Containerization](containerization.md):
+
+- run the whole `pi` process inside a container/sandbox
+- run host pi while routing built-in tool execution into a Gondolin micro-VM
+- mount only the workspace paths the agent should access
+- avoid mounting host `~/.pi/agent` unless the container should access host sessions, settings, and credentials
+- pass the minimum required API keys or use short-lived credentials
+- restrict network access when the task does not need it
+- review diffs and outputs before copying results back to trusted systems
+
+If you bind-mount a host workspace read/write, writes from inside the container or VM can still modify host files. Use read-only mounts or copy files into and out of the sandbox when you need stronger protection from unintended writes.
+
+## Reporting Security Issues
+
+To report a security issue, follow the repository [Security Policy](https://github.com/earendil-works/pi-mono/blob/main/SECURITY.md). Do not open a public issue for security-sensitive reports.
+
+Expected local-agent behavior, lack of a built-in sandbox, prompt injection from untrusted content, and behavior of user-installed extensions or skills are generally outside the security boundary unless the report demonstrates a real privilege-boundary bypass or shows how pi grants access that the local user did not already have.
 
 ---
 
-## 4. Containerization patterns
+## Containerization
+
+Pi runs with all permissions by default, but in some cases, you will want to have more control over what directories Pi can write to and which accesses it has.
+
+There are two general options. You can either
+1. run the whole `pi` process inside an isolated environment, or
+2. run `pi` on the host and route tool execution into an isolated environment.
+
+## Choose a pattern
 
 | Pattern | What is isolated | Best for | Notes |
-|---------|------------------|----------|-------|
-| Gondolin extension | Built-in tools & `!` commands | Local micro-VM isolation, auth stays on host | `examples/extensions/gondolin/` |
-| Plain Docker | Whole `pi` process | Simple local isolation | Provider API keys enter the container |
-| OpenShell | Whole `pi` process | Local or remote managed sandbox | Requires an OpenShell gateway |
+| --- | --- | --- | --- |
+| Gondolin extension | Built-in tools and `!` commands | Local micro-VM isolation while keeping auth on host | See [`examples/extensions/gondolin/`](../examples/extensions/gondolin/). |
+| Plain Docker | Whole `pi` process in a local container | Simple local isolation | Provider API keys enter the container. |
+| OpenShell | Whole `pi` process in a policy-controlled sandbox | Local or remote managed sandbox | Requires an OpenShell gateway |
 
-Extensions run wherever the `pi` process runs. With host Pi + a tool-routing extension, other
-custom extension tools still run on the host unless they also delegate.
+Extensions run wherever the `pi` process runs. If you run host `pi` with a tool-routing extension, other custom extension tools still run on the host unless they also delegate their operations.
 
-### Gondolin (local Linux micro-VM)
+## Gondolin
 
-Repo `earendil-works/gondolin`, package `@earendil-works/gondolin`. Requires Node.js **≥ 23.6.0** and
-**QEMU**.
+[Gondolin](https://github.com/earendil-works/gondolin) is a local Linux micro-VM.
+Use the [example extension](../examples/extensions/gondolin) when you want `pi` on the host but all built-in tools routed into the VM.
+
+Setup:
 
 ```bash
 cp -R packages/coding-agent/examples/extensions/gondolin ~/.pi/agent/extensions/gondolin
-cd ~/.pi/agent/extensions/gondolin && npm install --ignore-scripts
+cd ~/.pi/agent/extensions/gondolin
+npm install --ignore-scripts
+```
+
+Run from the project you want mounted:
+
+```bash
 cd /path/to/project
 pi -e ~/.pi/agent/extensions/gondolin
 ```
 
-Mounts host cwd at `/workspace`, overrides `read/write/edit/bash/grep/find/ls`, routes `!` commands
-into the VM; writes under `/workspace` pass through to the host.
+The extension mounts the host cwd at `/workspace` in the VM and overrides `read`, `write`, `edit`, `bash`, `grep`, `find`, and `ls`.
+User `!` commands are routed into the VM, as well.
+File changes under `/workspace` write through to the host.
 
-### Plain Docker
+Requirements: Node.js >= 23.6.0 for `@earendil-works/gondolin`, plus QEMU (requires installation through your package manager).
+
+## Plain Docker
+
+Run the whole `pi` process in Docker when you want the simplest local container boundary.
+
+`Dockerfile.pi`:
 
 ```dockerfile
-# Dockerfile.pi
 FROM node:24-bookworm-slim
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends bash ca-certificates git ripgrep \
   && rm -rf /var/lib/apt/lists/*
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
 WORKDIR /workspace
 ENTRYPOINT ["pi"]
 ```
 
+Build and run:
+
 ```bash
 docker build -t pi-sandbox -f Dockerfile.pi .
+
 docker run --rm -it \
   -e ANTHROPIC_API_KEY \
   -v "$PWD:/workspace" \
@@ -127,28 +142,40 @@ docker run --rm -it \
   pi-sandbox
 ```
 
-`-v "$PWD:/workspace"` writes affect host files. Use a **named volume** for `/root/.pi/agent`
-(container-local settings/sessions); mounting host `~/.pi/agent` exposes host auth/session files.
+The `-v "$PWD:/workspace"` mounts your current directory into the container at /workspace such that reads and writes in `/workspace` inside Docker directly affect your host files, like in the Gondolin example.
 
-### NVIDIA OpenShell
+Use a named volume for `/root/.pi/agent` if you want container-local settings and sessions. Mounting your host `~/.pi/agent` exposes host auth and session files to the container.
 
-Policy-controlled sandbox with filesystem, process, network, credential, and inference controls;
-runs via a local gateway (Docker/Podman/VM) or a remote Kubernetes gateway. Every sandbox needs an
-active gateway.
+## OpenShell
+
+Use [NVIDIA OpenShell](https://docs.nvidia.com/openshell/about/overview) when you want a policy-controlled sandbox with filesystem, process, network, credential, and inference controls.
+OpenShell can run sandboxes through a local gateway backed by Docker, Podman, or a VM runtime, or through a remote Kubernetes gateway.
+
+Every sandbox requires an active gateway.
+Register and select one before creating a sandbox:
 
 ```bash
 openshell gateway add <gateway-url> --name <name>
 openshell gateway select <name>
-openshell sandbox create --name pi-sandbox --from pi -- pi   # whole process runs inside
 ```
 
-Remote gateways don't bind-mount project files — clone in the sandbox or transfer:
+Launch `pi` inside an OpenShell sandbox:
 
 ```bash
-openshell sandbox upload   pi-sandbox ./repo /workspace
+openshell sandbox create --name pi-sandbox --from pi -- pi
+```
+
+In this pattern, the whole `pi` process runs inside the sandbox.
+Built-in tools, `!` commands, and extension tools execute inside the OpenShell boundary.
+
+If the gateway is remote, project files are not bind-mounted from the host, meaning writes in the sandbox are not reflected on your machine.
+Clone the repository inside the sandbox or use OpenShell file transfer commands:
+
+```bash
+openshell sandbox upload pi-sandbox ./repo /workspace
 openshell sandbox download pi-sandbox /workspace/repo ./repo-out
 ```
 
-**Credential/inference routing**: OpenShell can keep raw model API keys outside the sandbox — code
-inside calls `https://inference.local` and the gateway injects provider credentials upstream.
-Configure Pi to use the corresponding OpenAI-/Anthropic-compatible endpoint.
+OpenShell providers can keep raw model API keys outside the sandbox.
+When inference routing is configured, code inside the sandbox can call `https://inference.local`, and the gateway injects the configured provider credentials upstream.
+Configure Pi to use the corresponding OpenAI-compatible or Anthropic-compatible endpoint if you want model traffic to use this route.

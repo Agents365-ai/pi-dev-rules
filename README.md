@@ -45,7 +45,7 @@ Aider, Zed, OpenCode, OpenClaw / ClawHub, Hermes, pi-mono — plus major Chinese
 - `references/development.md` — building Pi from source, monorepo structure, forking/rebranding,
   debugging.
 - `references/packages-catalog.md` + `references/pi-packages.csv` — full pi.dev package gallery
-  (5,250 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
+  (5,249 packages) as a queryable manifest, plus `scripts/fetch-pi-packages.py` to refresh it.
 
 ## Install
 
