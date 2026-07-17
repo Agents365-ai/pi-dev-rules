@@ -1,95 +1,234 @@
 # Pi — Package Gallery Catalog
+Source: https://pi.dev/docs/latest/packages
 
-Source: <https://pi.dev/packages> · Snapshot: **2026-07-16** · **5,250 packages**
+---
 
-The pi.dev package gallery is backed by the **npm registry keyword `pi-package`** (pi.dev's own
-`/api` routes are disabled — "reserved for future features"). The gallery shows ~5,005; the extra
-handful are git-only packages not published to npm.
+> **Auto-built from individual doc pages.**
+> Sources: https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/docs/packages.md
 
-- **Full manifest**: [`pi-packages.csv`](./pi-packages.csv) — one row per package, all 5,250, sorted
-  by monthly downloads. Columns: `name, type, downloads_monthly, version, author, description,
-  install, repository, npm, updated`.
-- **Refresh** (list changes daily): `bash scripts/refresh.sh` — regenerates the CSV and prompts for a
-  changelog update. **Recommended cadence: weekly** (npm churn is fast but a weekly snapshot keeps
-  this skill current without constant PRs). Or run just the CSV: `python3 scripts/fetch-pi-packages.py`
-  (no API key needed).
+## Pi Packages
 
-> `type` is a **heuristic** derived from npm keywords/description (npm search doesn't expose the
-> gallery's real category, which comes from each package's `pi` manifest). Treat `name`,
-> `downloads_monthly`, `description`, `install`, and `repository` as exact; treat `type` as a hint.
+Pi packages bundle extensions, skills, prompt templates, and themes so you can share them through npm or git. A package can declare resources in `package.json` under the `pi` key, or use conventional directories.
 
-## Install any package
+## Table of Contents
 
-```bash
-pi install npm:<name>            # e.g. pi install npm:pi-web-access
-pi install npm:<name> -l         # -l → project .pi/settings.json (team sharing)
-pi install npm:<name> -e         # -e → temporary, single run
-pi remove npm:<name>
-```
+- [Install and Manage](#install-and-manage)
+- [Package Sources](#package-sources)
+- [Creating a Pi Package](#creating-a-pi-package)
+- [Package Structure](#package-structure)
+- [Dependencies](#dependencies)
+- [Package Filtering](#package-filtering)
+- [Enable and Disable Resources](#enable-and-disable-resources)
+- [Scope and Deduplication](#scope-and-deduplication)
 
-Git/HTTPS sources also work (`pi install git:github.com/user/repo@v1`). See `extending-pi.md` §5.
+## Install and Manage
 
-## Query the manifest
-
-For an agent (exact/greppable — don't load the whole CSV into context):
+> **Security:** Pi packages run with full system access. Extensions execute arbitrary code, and skills can instruct the model to perform any action including running executables. Review source code before installing third-party packages.
 
 ```bash
-grep -i 'memory'      references/pi-packages.csv          # search name+description
-awk -F, 'NR==1||$2=="skill"' references/pi-packages.csv   # filter by heuristic type
-# top 20 by downloads (CSV is already sorted desc):
-sed -n '1,21p'        references/pi-packages.csv
-# structured queries with python:
-python3 -c "import csv;[print(r['name'],r['downloads_monthly']) for r in csv.DictReader(open('references/pi-packages.csv')) if 'web' in r['description'].lower()]"
+pi install npm:@foo/bar@1.0.0
+pi install git:github.com/user/repo@v1
+pi install https://github.com/user/repo  # raw URLs work too
+pi install /absolute/path/to/package
+pi install ./relative/path/to/package
+
+pi remove npm:@foo/bar
+pi list                     # show installed packages from settings
+pi update                   # update pi only
+pi update --all             # update pi, update packages, and reconcile pinned git refs
+pi update --extensions      # update packages and reconcile pinned git refs only
+pi update --models          # refresh model catalogs only
+pi update --self            # update pi only
+pi update --self --force    # reinstall pi even if current
+pi update npm:@foo/bar      # update one package
+pi update --extension npm:@foo/bar
 ```
 
-For a human: open `pi-packages.csv` in any spreadsheet, or filter live on <https://pi.dev/packages>
-(search by name/description/author, filter by type, sort by downloads / recency / A–Z).
+These commands manage pi packages and `pi update` can update the pi CLI installation. To uninstall pi itself, see [Quickstart](quickstart.md#uninstall).
 
-## Breakdown (heuristic types)
+By default, `install` and `remove` write to user settings (`~/.pi/agent/settings.json`). Use `-l` to write to project settings (`.pi/settings.json`) instead. Project settings can be shared with your team, and pi installs any missing packages automatically on startup after the project is trusted.
 
-| type (heuristic) | count |
-| ------------------ | ------- |
-| extension | 2,693 |
-| package (bundle / uncategorized) | 1,957 |
-| skill | 459 |
-| theme | 93 |
-| prompt | 48 |
-| **total** | **5,250** |
+To try a package without installing it, use `--extension` or `-e`. This installs to a temporary directory for the current run only:
 
-## Top 30 by monthly downloads
+```bash
+pi -e npm:@foo/bar
+pi -e git:github.com/user/repo
+```
 
-| Package | Downloads/mo | Description |
-| --------- | -------------: | ------------- |
-| `@vigolium/piolium` | 250,543 | Multi-phase security audits with specialist sub-agents, isolated context, capped concurrency, resumable state |
-| `@hypabolic/pi-hypa` | 200,308 | Keeps noisy tool output out of context; rewrites shell commands through Hypa for deterministic compression |
-| `pi-web-access` | 139,172 | Web search, URL fetch, GitHub clone, PDF/YouTube/video analysis (many search backends) |
-| `pi-mcp-adapter` | 129,186 | Model Context Protocol (MCP) adapter extension for Pi |
-| `context-mode` | 113,882 | MCP plugin that saves ~98% of context; sandboxed code exec, FTS5 knowledge base, intent search |
-| `pi-subagents` | 112,546 | Delegate tasks to subagents with chains, parallel execution, TUI |
-| `@nitra/cursor` | 40,673 | CLI to download cursor rules into a local repo |
-| `@tintinweb/pi-subagents` | 39,580 | Claude Code-style autonomous sub-agents for Pi |
-| `bigpowers` | 35,832 | 73 agent skills synthesizing software-engineering discipline |
-| `pi-lens` | 31,637 | Real-time code feedback — LSP, linters, formatters, type-checking, structural analysis |
-| `@remnic/plugin-pi` | 30,324 | Remnic memory extension for Pi Coding Agent |
-| `@plannotator/pi-extension` | 29,548 | Interactive plan review with annotations; code/PR review |
-| `@quintinshaw/pi-dynamic-workflows` | 25,328 | Dynamic workflows fanning a task across many subagents |
-| `@gotgenes/pi-permission-system` | 24,561 | Permission enforcement for the Pi agent |
-| `pi-simplify` | 23,730 | Reviews changed code for clarity/maintainability |
-| `@juicesharp/rpiv-ask-user-question` | 22,940 | Structured questionnaire the model can put to you |
-| `@dietrichgebert/ponytail` | 22,582 | "Lazy senior dev" mode skill — the best code is the code you never wrote |
-| `@ff-labs/pi-fff` | 21,434 | FFF-powered fuzzy file + content search |
-| `@mjasnikovs/pi-task` | 20,068 | Deterministic task planning with crash-safe /task pipelines |
-| `@juicesharp/rpiv-todo` | 19,993 | Todo list as a live overlay that survives /reload |
-| `pi-hermes-memory` | 16,575 | Persistent memory + session search + secret scanning |
-| `pi-crew` | 15,802 | Coordinated AI teams, workflows, worktrees, async orchestration |
-| `@ayulab/pi-rewind` | 15,556 | `/rewind` checkpoint navigation |
-| `gentle-pi` | 15,419 | Senior-architect harness (SDD/OpenSpec, subagents) |
-| `@raindrop-ai/pi-agent` | 15,173 | Raindrop observability / tracing for Pi |
-| `@narumitw/pi-goal` | 13,593 | Autonomous /goal completion with ordered queues |
-| `@ollama/pi-web-search` | 12,495 | Web search/fetch via Ollama APIs |
-| `pi-readseek` | 12,177 | Hash-anchored read/edit/grep, structural code maps, structural search |
-| `pi-shazam` | 11,823 | Codebase-awareness toolkit — 7 structural analysis tools; MCP |
-| `pi-agent-browser-native` | 11,550 | Exposes agent-browser as a native browser-automation tool |
+## Package Sources
 
-The remaining ~5,220 packages are in [`pi-packages.csv`](./pi-packages.csv). Downloads are npm
-monthly figures at snapshot time; re-run the fetch script for current numbers.
+Pi accepts three source types in settings and `pi install`.
+
+### npm
+
+```
+npm:@scope/pkg@1.2.3
+npm:pkg
+```
+
+- Versioned specs are pinned and skipped by package updates (`pi update --extensions`, `pi update --all`).
+- User installs go under `~/.pi/agent/npm/`.
+- Project installs go under `.pi/npm/`.
+- Set `npmCommand` in `settings.json` to pin npm package lookup and install operations to a specific wrapper command such as `mise` or `asdf`.
+
+Example:
+
+```json
+{
+  "npmCommand": ["mise", "exec", "node@20", "--", "npm"]
+}
+```
+
+### git
+
+```
+git:github.com/user/repo@v1
+git:git@github.com:user/repo@v1
+https://github.com/user/repo@v1
+ssh://git@github.com/user/repo@v1
+```
+
+- Without `git:` prefix, only protocol URLs are accepted (`https://`, `http://`, `ssh://`, `git://`).
+- With `git:` prefix, shorthand formats are accepted, including `github.com/user/repo` and `git@github.com:user/repo`.
+- HTTPS and SSH URLs are both supported.
+- SSH URLs use your configured SSH keys automatically (respects `~/.ssh/config`).
+- For non-interactive runs (for example CI), you can set `GIT_TERMINAL_PROMPT=0` to disable credential prompts and set `GIT_SSH_COMMAND` (for example `ssh -o BatchMode=yes -o ConnectTimeout=5`) to fail fast.
+- Refs are pinned tags or commits. `pi update --extensions` and `pi update --all` do not move them to newer refs, but they do reconcile an existing clone to the configured ref.
+- Use `pi install git:host/user/repo@new-ref` to update settings and move an existing package to a new pinned ref.
+- Cloned to `~/.pi/agent/git/<host>/<path>` (global) or `.pi/git/<host>/<path>` (project).
+- When reconciliation changes the checkout, pi resets and cleans the clone, then runs `npm install` if `package.json` exists.
+
+**SSH examples:**
+```bash
+# git@host:path shorthand (requires git: prefix)
+pi install git:git@github.com:user/repo
+
+# ssh:// protocol format
+pi install ssh://git@github.com/user/repo
+
+# With version ref
+pi install git:git@github.com:user/repo@v1.0.0
+```
+
+### Local Paths
+
+```
+/absolute/path/to/package
+./relative/path/to/package
+```
+
+Local paths point to files or directories on disk and are added to settings without copying. Relative paths are resolved against the settings file they appear in. If the path is a file, it loads as a single extension. If it is a directory, pi loads resources using package rules.
+
+## Creating a Pi Package
+
+Add a `pi` manifest to `package.json` or use conventional directories. Include the `pi-package` keyword for discoverability.
+
+```json
+{
+  "name": "my-package",
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./extensions"],
+    "skills": ["./skills"],
+    "prompts": ["./prompts"],
+    "themes": ["./themes"]
+  }
+}
+```
+
+Paths are relative to the package root. Arrays support glob patterns and `!exclusions`.
+
+### Gallery Metadata
+
+The [package gallery](https://pi.dev/packages) displays packages tagged with `pi-package`. Add `video` or `image` fields to show a preview:
+
+```json
+{
+  "name": "my-package",
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./extensions"],
+    "video": "https://example.com/demo.mp4",
+    "image": "https://example.com/screenshot.png"
+  }
+}
+```
+
+- **video**: MP4 only. On desktop, autoplays on hover. Clicking opens a fullscreen player.
+- **image**: PNG, JPEG, GIF, or WebP. Displayed as a static preview.
+
+If both are set, video takes precedence.
+
+## Package Structure
+
+### Convention Directories
+
+If no `pi` manifest is present, pi auto-discovers resources from these directories:
+
+- `extensions/` loads `.ts` and `.js` files
+- `skills/` recursively finds `SKILL.md` folders and loads top-level `.md` files as skills
+- `prompts/` loads `.md` files
+- `themes/` loads `.json` files
+
+## Dependencies
+
+Third party runtime dependencies belong in `dependencies` in `package.json`. Dependencies that do not register extensions, skills, prompt templates, or themes also belong in `dependencies`. When pi installs a package from npm or git, it runs `npm install`, so those dependencies are installed automatically.
+
+Pi bundles core packages for extensions and skills. If you import any of these, list them in `peerDependencies` with a `"*"` range and do not bundle them: `@earendil-works/pi-ai`, `@earendil-works/pi-agent-core`, `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`, `typebox`.
+
+Other pi packages must be bundled in your tarball. Add them to `dependencies` and `bundledDependencies`, then reference their resources through `node_modules/` paths. Pi loads packages with separate module roots, so separate installs do not collide or share modules.
+
+Example:
+
+```json
+{
+  "dependencies": {
+    "shitty-extensions": "^1.0.1"
+  },
+  "bundledDependencies": ["shitty-extensions"],
+  "pi": {
+    "extensions": ["extensions", "node_modules/shitty-extensions/extensions"],
+    "skills": ["skills", "node_modules/shitty-extensions/skills"]
+  }
+}
+```
+
+## Package Filtering
+
+Filter what a package loads using the object form in settings:
+
+```json
+{
+  "packages": [
+    "npm:simple-pkg",
+    {
+      "source": "npm:my-package",
+      "extensions": ["extensions/*.ts", "!extensions/legacy.ts"],
+      "skills": [],
+      "prompts": ["prompts/review.md"],
+      "themes": ["+themes/legacy.json"]
+    }
+  ]
+}
+```
+
+`+path` and `-path` are exact paths relative to the package root.
+
+- Omit a key to load all of that type.
+- Use `[]` to load none of that type.
+- `!pattern` excludes matches.
+- `+path` force-includes an exact path.
+- `-path` force-excludes an exact path.
+- Filters layer on top of the manifest. They narrow down what is already allowed.
+
+## Enable and Disable Resources
+
+Use `pi config` to enable or disable extensions, skills, prompt templates, and themes from installed packages and local directories. `pi config` starts in global settings (`~/.pi/agent/settings.json`); press Tab to switch between global and project-local modes. Use `pi config -l` to start in project overrides (`.pi/settings.json`) with inherited global resources dimmed.
+
+## Scope and Deduplication
+
+Packages can appear in both global and project settings. If the same package appears in both, the project entry wins unless the project entry has `autoload: false`, in which case it is applied as a delta over the global entry. Identity is determined by:
+
+- npm: package name
+- git: repository URL without ref
+- local: resolved absolute path
