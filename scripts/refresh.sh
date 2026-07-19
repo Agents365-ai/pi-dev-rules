@@ -6,15 +6,16 @@
 # current without churn.
 #
 # Usage: bash scripts/refresh.sh
-set -euo pipefail; cd "$(dirname "$0")/.."
+set -euo pipefail
+cd "$(dirname "$0")/.."
 
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
 echo "=== [1/3] Fetch latest docs from pi repo ==="
-for f in index.md quickstart.md usage.md providers.md security.md containerization.md settings.md keybindings.md sessions.md compaction.md extensions.md skills.md prompt-templates.md themes.md packages.md models.md custom-provider.md session-format.md sdk.md rpc.md json.md tui.md windows.md termux.md tmux.md terminal-setup.md shell-aliases.md development.md; do
-  echo "  fetching $f..."
-  curl -sfL "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/docs/$f" -o "$TMPDIR/$f" || echo "  WARNING: $f failed"
+for f in index.md quickstart.md usage.md providers.md llama-cpp.md security.md containerization.md settings.md keybindings.md sessions.md compaction.md extensions.md skills.md prompt-templates.md themes.md packages.md models.md custom-provider.md session-format.md sdk.md rpc.md json.md tui.md windows.md termux.md tmux.md terminal-setup.md shell-aliases.md development.md; do
+	echo "  fetching $f..."
+	curl -sfL "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/docs/$f" -o "$TMPDIR/$f" || echo "  WARNING: $f failed"
 done
 python3 scripts/build-references.py "$TMPDIR"
 echo ""
