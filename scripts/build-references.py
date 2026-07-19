@@ -12,8 +12,12 @@ import os
 import sys
 
 SRC = sys.argv[1]  # temp dir with individual .md files
-OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "references"
+OUT = (
+    sys.argv[2]
+    if len(sys.argv) > 2
+    else os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "references"
+    )
 )
 
 # (output_file, [(source_file, header), ...])
@@ -26,6 +30,7 @@ BUNDLES = {
     ],
     "providers-and-models.md": [
         ("providers.md", "Providers"),
+        ("llama-cpp.md", "llama.cpp Router Setup"),
         ("models.md", "Custom Models"),
         ("custom-provider.md", "Custom Providers"),
     ],
@@ -78,7 +83,7 @@ HEADER_DOCS = {
     ),
     "providers-and-models.md": (
         "# Pi — Providers & Custom Models",
-        "Source: https://pi.dev/docs/latest/providers, /models, /custom-provider",
+        "Source: https://pi.dev/docs/latest/providers, /llama-cpp, /models, /custom-provider",
     ),
     "settings-and-compaction.md": (
         "# Pi — Settings & Compaction",

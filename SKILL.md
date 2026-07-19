@@ -1,9 +1,9 @@
 ---
 name: pi-dev-rules
-version: 0.1.4
+version: 0.1.5
 description: Authoritative reference for Pi (`@earendil-works/pi-coding-agent`) — install, configure, run, and extend. Use when the user asks about Pi CLI/flags/commands, providers/models/auth, settings/compaction/sessions, security/trust, extensions, skills, prompt templates, themes, packages, custom providers, TUI components, the SDK, RPC mode, or JSON streaming.
 license: MIT
-metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-17","packagesRefreshed":"2026-07-17"}
+metadata: {"source":"https://pi.dev/docs/latest","docVersion":"latest","fetched":"2026-07-19","packagesRefreshed":"2026-07-19"}
 ---
 
 # Pi Dev Rules
@@ -30,7 +30,7 @@ and build Pi customizations without re-fetching.
 | File | Covers |
 | ------ | -------- |
 | `references/cli-and-usage.md` | Install, auth, launching, CLI flags, slash commands, message queue, context files, env vars, sessions, keybindings |
-| `references/providers-and-models.md` | Subscription & API-key providers (30+), `auth.json` (+ scoped `env`), cloud providers (Azure/Bedrock/Vertex/Cloudflare), custom models in `models.json`, `compat`, custom-provider extensions |
+| `references/providers-and-models.md` | Subscription & API-key providers (30+), llama.cpp local router, `auth.json` (+ scoped `env`), cloud providers (Azure/Bedrock/Vertex/Cloudflare), custom models in `models.json`, `compat`, custom-provider extensions |
 | `references/settings-and-compaction.md` | `settings.json` schema + example, trust/analytics/retry/transport keys, compaction (auto/manual) and branch summarization |
 | `references/extending-pi.md` | Extension API (events, tools, commands, UI), Skills (SKILL.md), Prompt Templates, Themes, Packages |
 | `references/tui-components.md` | TUI component system for custom extension/tool UIs (components, overlays, theming, custom editor) |
